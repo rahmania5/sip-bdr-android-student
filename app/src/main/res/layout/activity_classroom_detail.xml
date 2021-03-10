@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".activity.ClassroomDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_classroomName"
+            style="@style/TextAbout.Black"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="26sp"
+            tools:text="Nama Kelas" />
+
+        <TextView
+            style="@style/TextAbout.Subtitle"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/class_description" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp">
+
+    <!--        <TableRow-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginBottom="8dp">-->
+
+    <!--            <TextView-->
+    <!--                style="@style/TextSpec.Field"-->
+    <!--                android:text="@string/lecturer" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/tv_lecturer"-->
+    <!--                style="@style/TextSpec.Value"-->
+    <!--                tools:text="Dosen Pengampu" />-->
+    <!--        </TableRow>-->
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    style="@style/TextSpec.Field"
+                    android:text="@string/sks" />
+
+                <TextView
+                    android:id="@+id/tv_sks"
+                    style="@style/TextSpec.Value"
+                    tools:text="3 SKS" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    style="@style/TextSpec.Field"
+                    android:text="@string/day" />
+
+                <TextView
+                    android:id="@+id/tv_day"
+                    style="@style/TextSpec.Value"
+                    tools:text="Day" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    style="@style/TextSpec.Field"
+                    android:text="@string/time" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    style="@style/TextSpec.Value"
+                    tools:text="Time - Time" />
+            </TableRow>
+
+        </TableLayout>
+
+        <TextView
+            style="@style/TextAbout.Subtitle"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/classmeeting_description" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingTop="5dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_meetings"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/meetings_list"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

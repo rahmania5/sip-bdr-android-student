@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/class_img"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginEnd="16dp"
+        app:civ_border_color="@color/colorPrimary"
+        app:civ_border_width="2dp"
+        android:src="@drawable/logoua"
+        android:contentDescription="@string/content_desc"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/class_img"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_item_classroom"
+            style="@style/TextList"
+            android:layout_marginBottom="8dp"
+            android:textStyle="bold"
+            tools:text="Nama Kelas" />
+
+        <TextView
+            android:id="@+id/tv_item_day"
+            style="@style/TextList"
+            android:layout_marginBottom="8dp"
+            tools:text="Hari" />
+
+        <TextView
+            android:id="@+id/tv_item_time"
+            style="@style/TextList"
+            tools:text="Jadwal" />
+    </LinearLayout>
+</RelativeLayout>

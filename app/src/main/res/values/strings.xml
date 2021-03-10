@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">SIP BDR</string>
+    <!-- Strings related to login -->
+    <string name="username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_save">Simpan</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="menu_1">Daftar Kelas</string>
+    <string name="menu_2">Pengajuan Lokasi</string>
+    <string name="menu_3">Akun</string>
+    <string name="app_long_name">Sistem Informasi Presensi BDR</string>
+    <string name="nim">NIM. %1$s</string>
+    <string name="content_desc">Logo Unand</string>
+    <string name="content_desc_2">Profile pic</string>
+    <string name="change_pass">Ganti Password</string>
+    <string name="loc_description">Detail Pengajuan Lokasi</string>
+    <string name="address">Alamat</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude</string>
+    <string name="submission_status">Status</string>
+    <string name="btn_accept">Terima Pengajuan</string>
+    <string name="menu_item">Logout</string>
+    <string name="class_description">Detail Kelas</string>
+    <string name="sks">SKS</string>
+    <string name="day">Hari</string>
+    <string name="time">Jam</string>
+    <string name="classmeeting_description">Daftar Pertemuan</string>
+    <string name="lecturer">Dosen</string>
+    <string name="action_save_changes">Simpan Perubahan</string>
+    <string name="meeting_description">Detail Pertemuan</string>
+    <string name="presence_description">Daftar Hadir</string>
+    <string name="old_password">Password Lama</string>
+    <string name="new_password">Password Baru</string>
+    <string name="password_confirmation">Konfirmasi Password Baru</string>
+    <string name="no_location_submission">Tidak ada pengajuan lokasi mahasiswa</string>
+    <string name="no_classroom">Tidak ada kelas yang diambil</string>
+    <string name="loading">Loading…</string>
+    <string name="google_maps_key">AIzaSyCtigRen8h--o1nQV9HijxeJPCKhZoKQjo</string>
+</resources>
