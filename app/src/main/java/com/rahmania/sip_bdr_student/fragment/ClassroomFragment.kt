@@ -16,6 +16,7 @@ import com.rahmania.sip_bdr_student.activity.ClassroomDetailActivity
 import com.rahmania.sip_bdr_student.adapter.ClassroomAdapter
 import com.rahmania.sip_bdr_student.helper.SharedPreferences
 import com.rahmania.sip_bdr_student.helper.SharedPreferences.SessionManager
+import com.rahmania.sip_bdr_student.viewModel.AccountViewModel
 import com.rahmania.sip_bdr_student.viewModel.ClassroomViewModel
 import org.json.JSONArray
 import org.json.JSONException
@@ -26,6 +27,7 @@ class ClassroomFragment : Fragment() {
     private var rv: RecyclerView? = null
     private var tvNoClassroom: TextView? = null
     private var classroomVM: ClassroomViewModel? = null
+    private var accountVM: AccountViewModel? = null
     private var sessionManager: SharedPreferences? = null
 
     override fun onCreateView(
@@ -38,6 +40,8 @@ class ClassroomFragment : Fragment() {
 
     override fun onViewCreated(v: View, savedInstanceState: Bundle?) {
         super.onViewCreated(v, savedInstanceState)
+        val tvName: TextView = v.findViewById(R.id.tv_name) as TextView
+        val tvNim: TextView = v.findViewById(R.id.tv_nim) as TextView
         rv = v.findViewById<View>(R.id.rv_classrooms) as RecyclerView
         rv!!.layoutManager = LinearLayoutManager(activity)
         tvNoClassroom = v.findViewById<View>(R.id.tv_no_classroom) as TextView
@@ -55,12 +59,28 @@ class ClassroomFragment : Fragment() {
         sessionManager = SessionManager(context)
         sessionManager!!.isLogin()
         val user = sessionManager!!.getUserDetail()
-        val token = user!![sessionManager!!.TOKEN]
+        val token = user[sessionManager!!.TOKEN]
+        accountVM =
+            ViewModelProvider(
+                requireActivity(),
+                ViewModelProvider.NewInstanceFactory()
+            ).get(AccountViewModel::class.java)
+
+        accountVM!!.setProfile(token)
+        accountVM!!.getProfile().observe(
+            requireActivity(),
+            Observer<HashMap<String, String>> { stringStringHashMap ->
+                if (stringStringHashMap.size > 0) {
+                    tvName.text = stringStringHashMap[accountVM!!.name]
+                    tvNim.text = stringStringHashMap[accountVM!!.nim]
+                }
+            })
+
         classroomVM =
             ViewModelProvider(requireActivity(), ViewModelProvider.NewInstanceFactory()).get(
                 ClassroomViewModel::class.java)
-        classroomVM!!.setClassroomSchedule(token)
-        classroomVM!!.getClassroomSchedule()?.observe(viewLifecycleOwner,
+        classroomVM!!.setClassrooms(token)
+        classroomVM!!.getClassrooms()?.observe(viewLifecycleOwner,
             Observer<JSONArray?> { data ->
                 tvNoClassroom!!.visibility = View.VISIBLE
                 if (data != null && data.length() > 0) {

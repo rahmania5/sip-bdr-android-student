@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "463196219256",
+    "firebase_url": "https://si-presensi-online.firebaseio.com",
+    "project_id": "si-presensi-online",
+    "storage_bucket": "si-presensi-online.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:463196219256:android:1b8f5b7a0ac85f1a348a8d",
+        "android_client_info": {
+          "package_name": "com.rahmania.sip_bdr_student"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "463196219256-16v5542agvt7iudqh0scmhlaae3vfl6t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rahmania.sip_bdr_student",
+            "certificate_hash": "79127ad9d120ff0724c5b7351da2ca0067a0d158"
+          }
+        },
+        {
+          "client_id": "463196219256-okji1p6vm6neo3mau3fivrr161hpofdp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9OurwtCkRBq7XQRNpqj959Xpld4jewKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "463196219256-okji1p6vm6neo3mau3fivrr161hpofdp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

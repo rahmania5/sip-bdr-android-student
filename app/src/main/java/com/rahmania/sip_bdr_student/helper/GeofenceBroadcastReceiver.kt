@@ -7,24 +7,21 @@ import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
-import com.rahmania.sip_bdr_student.activity.GeofenceActivity
-import com.rahmania.sip_bdr_student.api.ApiClient.getClient
-import com.rahmania.sip_bdr_student.api.ApiInterface
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.rahmania.sip_bdr_student.activity.MainActivity
 
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
+    private lateinit var geofenceManager: GeofenceManager
     private var notificationHelper: NotificationHelper? = null
-    override fun onReceive(context: Context?, intent: Intent) {
-        val attendanceId = intent.getIntExtra("id", 0)
-        val token = intent.getStringExtra("token")
+    override fun onReceive(context: Context, intent: Intent) {
         notificationHelper = NotificationHelper(context)
+
         val geofencingEvent: GeofencingEvent = GeofencingEvent.fromIntent(intent)
         if (geofencingEvent.hasError()) {
-            Log.d(TAG, "onReceive: ")
+            val errorMessage = geofenceManager.getErrorString(context,
+                geofencingEvent.errorCode)
+            Log.e(TAG, errorMessage)
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
             return
         }
         val geofenceList: List<Geofence> =
@@ -32,58 +29,35 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         for (geofence in geofenceList) {
             Log.d(TAG, "onReceive: " + geofence.requestId)
         }
+
         when (geofencingEvent.geofenceTransition) {
             Geofence.GEOFENCE_TRANSITION_ENTER -> {
-                Toast.makeText(context, "GEOFENCE_TRANSITION_ENTER", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Entered location", Toast.LENGTH_SHORT).show()
                 notificationHelper!!.sendHighPriorityNotification(
-                    "GEOFENCE TRANSITION ENTER", "Enter Location",
-                    GeofenceActivity::class.java
+                    "Geofence Notification", "Entered location",
+                    MainActivity::class.java
                 )
-                updateStatus(context, attendanceId, token)
             }
             Geofence.GEOFENCE_TRANSITION_DWELL -> {
-                Toast.makeText(context, "GEOFENCE_TRANSITION_DWELL", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Updating attendance status...", Toast.LENGTH_SHORT).show()
                 notificationHelper!!.sendHighPriorityNotification(
-                    "GEOFENCE TRANSITION DWELL", "",
-                    GeofenceActivity::class.java
+                    "Geofence Notification", "Updating attendance status...",
+                    MainActivity::class.java
                 )
+                context.sendBroadcast(Intent("UPDATE_ATTENDANCE"))
             }
             Geofence.GEOFENCE_TRANSITION_EXIT -> {
-                Toast.makeText(context, "GEOFENCE_TRANSITION_EXIT", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "You are out of the registered geofence", Toast.LENGTH_SHORT).show()
                 notificationHelper!!.sendHighPriorityNotification(
-                    "GEOFENCE TRANSITION EXIT", "Out Location",
-                    GeofenceActivity::class.java
+                    "Geofence Notification", "You are out of the registered geofence",
+                    MainActivity::class.java
                 )
+                context.sendBroadcast(Intent("UPDATE_NEEDS_REVIEW"))
             }
         }
     }
 
-    private fun updateStatus(
-        context: Context?,
-        attendanceId: Int?,
-        token: String?
-    ) {
-        val apiInterface: ApiInterface = getClient()!!.create(ApiInterface::class.java)
-        val attendanceResponse: Call<ResponseBody?>? = apiInterface.updateAttendance(token, attendanceId)
-        attendanceResponse?.enqueue(object : Callback<ResponseBody?> {
-            override fun onResponse(
-                call: Call<ResponseBody?>?,
-                response: Response<ResponseBody?>
-            ) {
-                if (response.isSuccessful) {
-                    Toast.makeText(context, "Berhasil mengisi daftar hadir", Toast.LENGTH_SHORT).show()
-                    notificationHelper!!.sendHighPriorityNotification(
-                        "Berhasil!", "Berhasil mengisi daftar hadir!",
-                        GeofenceActivity::class.java
-                    )
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseBody?>?, t: Throwable?) {}
-        })
-    }
-
     companion object {
-        private const val TAG = "GeofenceBR"
+        const val TAG = "GeofenceBR"
     }
 }

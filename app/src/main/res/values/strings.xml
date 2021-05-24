@@ -40,4 +40,28 @@
     <string name="no_classroom">Tidak ada kelas yang diambil</string>
     <string name="loading">Loading…</string>
     <string name="google_maps_key">AIzaSyCtigRen8h--o1nQV9HijxeJPCKhZoKQjo</string>
+    <string name="date">Tanggal</string>
+    <string name="topic">Materi</string>
+    <string name="action_taking_attendance">Isi Presensi</string>
+    <string name="action_see_history">Lihat Riwayat Kehadiran</string>
+    <string name="attendance_description">Riwayat Kehadiran</string>
+    <string name="content_desc_attendance">Status Kehadiran</string>
+    <string name="nim2">NIM</string>
+    <string name="name">Nama</string>
+    <string name="courseCode">Kode Matkul</string>
+    <string name="schedule">Jadwal</string>
+    <string name="classroom">Kelas</string>
+    <string name="logout">Logout</string>
+    <string name="geofence_unknown_error">
+      Unknown error: the Geofence service is not available now.
+    </string>
+        <string name="geofence_not_available">
+      Geofence service is not available now. Go to Settings>Location>Mode and choose High accuracy.
+    </string>
+        <string name="geofence_too_many_geofences">
+      Your app has registered too many geofences.
+    </string>
+        <string name="geofence_too_many_pending_intents">
+      You have provided too many PendingIntents to the addGeofences() call.
+    </string>
 </resources>

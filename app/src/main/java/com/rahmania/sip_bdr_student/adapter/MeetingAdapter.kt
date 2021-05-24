@@ -1,6 +1,5 @@
 package com.rahmania.sip_bdr_student.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,25 +9,27 @@ import com.rahmania.sip_bdr_student.R
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class ClassroomAdapter : RecyclerView.Adapter<ClassroomAdapter.ListViewHolder>() {
-    private var classroomData = JSONArray()
+class MeetingAdapter : RecyclerView.Adapter<MeetingAdapter.ListViewHolder>() {
+    private var meetingData = JSONArray()
     private var listener: OnItemClickListener? = null
 
-    fun ClassroomAdapter(listener: OnItemClickListener?) {
+    fun MeetingAdapter(listener: OnItemClickListener?) {
         this.listener = listener
     }
 
     fun setData(items: JSONArray) {
-        classroomData = items
+        meetingData = items
         notifyDataSetChanged()
     }
 
     inner class ListViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
-        val tvClassroom: TextView = itemView.findViewById<View>(R.id.tv_item_classroom) as TextView
-        val tvCourseCode: TextView = itemView.findViewById<View>(R.id.tv_item_code) as TextView
+        val tvNumber: TextView = itemView.findViewById<View>(R.id.tv_item_number) as TextView
+        val tvDate: TextView = itemView.findViewById<View>(R.id.tv_item_date) as TextView
         fun bind(item: JSONObject, listener: OnItemClickListener?) {
             itemView.setOnClickListener {
                 try {
@@ -42,23 +43,26 @@ class ClassroomAdapter : RecyclerView.Adapter<ClassroomAdapter.ListViewHolder>()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ListViewHolder {
         val mView: View = LayoutInflater.from(viewGroup.context).inflate(
-            R.layout.classrooms_list,
+            R.layout.meetings_list,
             viewGroup, false
         )
         return ListViewHolder(mView)
     }
 
     override fun getItemCount(): Int {
-        return classroomData.length()
+        return meetingData.length()
     }
 
-    @SuppressLint("DefaultLocale")
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         try {
-            holder.tvClassroom.text = (classroomData.getJSONObject(position).getString("course_name").capitalizeFirstLetter() + " "
-                    + classroomData.getJSONObject(position).getString("classroom_code"))
-            holder.tvCourseCode.text = classroomData.getJSONObject(position).getString("course_code").toUpperCase()
-            holder.bind(classroomData.getJSONObject(position), listener)
+            val date = meetingData.getJSONObject(position).getString("date")
+            val outputDate = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+            val inputDate = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val dateFormat = inputDate.parse(date)
+
+            holder.tvNumber.text = ("Pertemuan ke-" + meetingData.getJSONObject(position).getString("number_of_meeting"))
+            holder.tvDate.text = outputDate.format(dateFormat)
+            holder.bind(meetingData.getJSONObject(position), listener)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -68,8 +72,4 @@ class ClassroomAdapter : RecyclerView.Adapter<ClassroomAdapter.ListViewHolder>()
         @Throws(JSONException::class)
         fun onItemClick(item: JSONObject)
     }
-
-    @SuppressLint("DefaultLocale")
-    private fun String.capitalizeFirstLetter() = this.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()
-
 }

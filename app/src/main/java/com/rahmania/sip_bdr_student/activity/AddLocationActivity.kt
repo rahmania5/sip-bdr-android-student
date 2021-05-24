@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -48,6 +49,8 @@ class AddLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private var etLatitude: EditText? = null
     private var btnAddLocation: Button? = null
 
+    private val FINE_LOCATION_ACCESS_REQUEST_CODE = 2001
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +74,7 @@ class AddLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun setUpContent() {
         val user = sessionManager!!.getUserDetail()
-        val token = user!![sessionManager!!.TOKEN]
+        val token = user[sessionManager!!.TOKEN]
 
         btnAddLocation?.setOnClickListener { v ->
             when (v.id) {
@@ -84,8 +87,10 @@ class AddLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
                 == PackageManager.PERMISSION_GRANTED) {
                 //Location Permission already granted
                 googleMap?.isMyLocationEnabled = true
@@ -164,10 +169,10 @@ class AddLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 override fun onMarkerDrag(marker: Marker) {
-                    Toast.makeText(
-                        this@AddLocationActivity,
-                        "Dragging", Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        this@AddLocationActivity,
+//                        "Dragging", Toast.LENGTH_SHORT
+//                    ).show()
                 }
             })
             setOnMyLocationButtonClickListener {
@@ -197,7 +202,8 @@ class AddLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 } else {
                     etAddress?.setText("")
                     Toast.makeText(
-                        this@AddLocationActivity, "Invalid location. Please select a valid location",
+                        this@AddLocationActivity,
+                        "Invalid location. Please select a valid location",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -209,16 +215,38 @@ class AddLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getLocation(): Location? {
         val locationManager: LocationManager =
             getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val criteria = Criteria()
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
-            //Location Permission already granted
-        }
-        return locationManager.getBestProvider(criteria, true)?.let {
-            locationManager.getLastKnownLocation(
-                it
+        val locationGPS: Location? =
+            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        val locationNet: Location? =
+            locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this@AddLocationActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                FINE_LOCATION_ACCESS_REQUEST_CODE
             )
+        }
+
+        var gpsLocationTime: Long = 0
+        if (null != locationGPS) {
+            gpsLocationTime = locationGPS.time
+        }
+
+        var netLocationTime: Long = 0
+
+        if (null != locationNet) {
+            netLocationTime = locationNet.time
+        }
+
+        return if (0 < gpsLocationTime - netLocationTime) {
+            locationGPS
+        } else {
+            locationNet
         }
     }
 
@@ -234,7 +262,7 @@ class AddLocationActivity : AppCompatActivity(), OnMapReadyCallback {
         locationCall?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
                 if (address!!.isNotEmpty() && longitude!!.isNotEmpty() && latitude!!.isNotEmpty()) {
-                     Toast.makeText(
+                    Toast.makeText(
                         this@AddLocationActivity,
                         "Pengajuan lokasi berhasil ditambahkan!",
                         Toast.LENGTH_SHORT
@@ -255,68 +283,12 @@ class AddLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
             override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
                 Log.e("error data", t.message.toString())
-                Toast.makeText(this@AddLocationActivity,
+                Toast.makeText(
+                    this@AddLocationActivity,
                     "Gagal menyimpan data. Mohon lengkapi field yang belum diisi.",
-                    Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
-
-//    private fun checkLocationPermission() {
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-//            != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(
-//                    this,
-//                    Manifest.permission.ACCESS_FINE_LOCATION
-//                )
-//            ) {
-//                AlertDialog.Builder(this)
-//                    .setTitle("Location Permission Needed")
-//                    .setMessage("This app needs the Location permission, please accept to use location functionality")
-//                    .setPositiveButton("OK"
-//                    ) { _dialog, i -> //Prompt the user once explanation has been shown
-//                        ActivityCompat.requestPermissions(
-//                            this@AddLocationActivity,
-//                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-//                            MY_PERMISSIONS_REQUEST_LOCATION
-//                        )
-//                    }
-//                    .create()
-//                    .show()
-//            } else {
-//                ActivityCompat.requestPermissions(
-//                    this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-//                    MY_PERMISSIONS_REQUEST_LOCATION
-//                )
-//            }
-//        }
-//    }
-
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<String?>?, grantResults: IntArray
-//    ) {
-//        when (requestCode) {
-//            MY_PERMISSIONS_REQUEST_LOCATION -> {
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.isNotEmpty()
-//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-//                ) {
-//                    // permission was granted, yay! Do the
-//                    // location-related task you need to do.
-//                    if (ContextCompat.checkSelfPermission(
-//                            this,
-//                            Manifest.permission.ACCESS_FINE_LOCATION
-//                        ) == PackageManager.PERMISSION_GRANTED
-//                    ) {
-//                        mGoogleMap?.setMyLocationEnabled(true)
-//                    }
-//                } else {
-//                    Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
-//                }
-//                return
-//            }
-//        }
-//    }
 }

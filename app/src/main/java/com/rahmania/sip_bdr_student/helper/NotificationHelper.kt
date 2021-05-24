@@ -18,7 +18,7 @@ import java.util.*
 
 class NotificationHelper(base: Context?) : ContextWrapper(base) {
     private val CHANNEL_NAME = "Final project channel"
-    private val CHANNEL_ID = "com.example.notifications$CHANNEL_NAME"
+    private val CHANNEL_ID = "com.rahmania.notifications$CHANNEL_NAME"
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private fun createChannels() {
@@ -40,23 +40,21 @@ class NotificationHelper(base: Context?) : ContextWrapper(base) {
     ) {
         val intent = Intent(this, activityName)
         val pendingIntent =
-            PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivity(this, 101, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification: Notification =
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setStyle(
-                    NotificationCompat.BigTextStyle().setSummaryText("summary")
-                        .setBigContentTitle(title).bigText(body)
-                )
+//                .setStyle(
+//                    NotificationCompat.BigTextStyle()
+//                        .setBigContentTitle(title).bigText(body)
+//                )
+                .setContentTitle(title)
+                .setContentText(body)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build()
         NotificationManagerCompat.from(this).notify(Random().nextInt(), notification)
-    }
-
-    companion object {
-        private const val TAG = "NotificationHelper"
     }
 
     init {

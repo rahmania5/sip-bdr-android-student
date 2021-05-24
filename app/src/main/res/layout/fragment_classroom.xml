@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,13 +7,87 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="?attr/actionBarSize"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_classrooms"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/classrooms_list" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="390dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            app:cardCornerRadius="45dp"
+            android:layout_marginStart="-50dp"
+            app:cardBackgroundColor="@color/colorCard">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="50dp"
+                android:padding="5dp">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    tools:ignore="UselessParent">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            style="@style/TextSpec.Field"
+                            android:textStyle="bold"
+                            android:text="@string/name" />
+
+                        <TextView
+                            android:id="@+id/tv_name"
+                            style="@style/TextSpec.Value"
+                            tools:text="Rahmania Jasmin" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            style="@style/TextSpec.Field"
+                            android:textStyle="bold"
+                            android:text="@string/nim2" />
+
+                        <TextView
+                            android:id="@+id/tv_nim"
+                            style="@style/TextSpec.Value"
+                            tools:text="NIP" />
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="0.8"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingTop="5dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_classrooms"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/classrooms_list" />
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_no_classroom"
@@ -21,6 +95,7 @@
         android:layout_height="match_parent"
         android:text="@string/no_classroom"
         style="@style/TextAbout.Subtitle"
+        android:visibility="gone"
         android:gravity="center_horizontal|center_vertical"/>
 
-</RelativeLayout>
+</LinearLayout>

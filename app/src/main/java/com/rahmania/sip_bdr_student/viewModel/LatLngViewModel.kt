@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.rahmania.sip_bdr_student.api.ApiClient.getClient
 import com.rahmania.sip_bdr_student.api.ApiInterface
 import okhttp3.ResponseBody
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -15,13 +14,16 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class ClassroomDetailViewModel : ViewModel() {
+class LatLngViewModel : ViewModel() {
     private lateinit var apiInterface: ApiInterface
-    private val meetingsData = MutableLiveData<JSONArray>()
+    private val latLng = MutableLiveData<HashMap<String, String>>()
+    val lat = "latitude"
+    val lng = "longitude"
 
-    fun setMeetings(token: String?, classroomId: Int?) {
+    fun setLocation(token: String?) {
+        val userLocation: HashMap<String, String> = HashMap()
         this.apiInterface = getClient()!!.create(ApiInterface::class.java)
-        apiInterface.getMeetings(token, classroomId)?.enqueue(object : Callback<ResponseBody?> {
+        apiInterface.getLatLng(token)?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(
                 call: Call<ResponseBody?>?,
                 response: Response<ResponseBody?>
@@ -30,8 +32,17 @@ class ClassroomDetailViewModel : ViewModel() {
                     val jsonRESULTS: JSONObject?
                     try {
                         jsonRESULTS = JSONObject(response.body()!!.string())
-                        val meetings = jsonRESULTS.getJSONArray("meetings")
-                        meetingsData.postValue(meetings)
+                        val location = jsonRESULTS.getJSONObject("location")
+                        if (location.length() != 0) {
+                            val latitude =
+                                location.getJSONObject("latlng").getString("latitude")
+                            val longitude =
+                                location.getJSONObject("latlng").getString("longitude")
+
+                            userLocation[lat] = latitude
+                            userLocation[lng] = longitude
+                            latLng.value = userLocation
+                        }
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     } catch (e: IOException) {
@@ -46,7 +57,8 @@ class ClassroomDetailViewModel : ViewModel() {
         })
     }
 
-    fun getMeetings(): LiveData<JSONArray>? {
-        return meetingsData
+    fun getLocation(): LiveData<HashMap<String, String>> {
+        return latLng
     }
+
 }

@@ -10,7 +10,8 @@ interface ApiInterface {
     @POST("login")
     fun loginResponse(
         @Field("username") username: String?,
-        @Field("password") password: String?
+        @Field("password") password: String?,
+        @Field("device_id") deviceId: String?
     ): Call<ResponseBody?>?
 
     @POST("logout")
@@ -32,7 +33,13 @@ interface ApiInterface {
     ): Call<ResponseBody?>?
 
     @GET("krs")
-    fun getClassroomSchedule(@Header("Authorization") authToken: String?): Call<ResponseBody?>?
+    fun getClassroomList(@Header("Authorization") authToken: String?): Call<ResponseBody?>?
+
+    @GET("schedules/{classroom_id}")
+    fun getClassroomSchedule(
+        @Header("Authorization") authToken: String?,
+        @Path("classroom_id") classroomId: Int?
+    ): Call<ResponseBody?>?
 
     @GET("studentlocation")
     fun getStudentSubmission(@Header("Authorization") authToken: String?): Call<ResponseBody?>?
@@ -63,6 +70,15 @@ interface ApiInterface {
         @Path("id") id: Int?
     ): Call<ResponseBody?>?
 
+    @GET("studentmeetings/{id}")
+    fun getMeetings(
+        @Header("Authorization") authToken: String?,
+        @Path("id") classroomId: Int?
+    ): Call<ResponseBody?>?
+
+    @GET("latlng")
+    fun getLatLng(@Header("Authorization") authToken: String?): Call<ResponseBody?>?
+
     @GET("attendance/{id}")
     fun getAttendanceHistory(
         @Header("Authorization") authToken: String?,
@@ -70,16 +86,20 @@ interface ApiInterface {
     ): Call<ResponseBody?>?
 
     @FormUrlEncoded
-    @PATCH("studentattendance/{id}")
-    fun confirmAttendance(
-        @Header("Authorization") authToken: String?,
-        @Path("id") id: Int?,
-        @Field("presence_status") presenceStatus: String?
-    ): Call<ResponseBody?>?
-
-    @PATCH("attendance/{id}")
+    @POST("studentattendance")
     fun updateAttendance(
         @Header("Authorization") authToken: String?,
-        @Path("id") attendanceId: Int?
+        @Field("krs_id") krsId: Int?,
+        @Field("meeting_id") meetingId: Int?,
+        @Field("presence_status") attendanceStatus: String?
+    ): Call<ResponseBody?>?
+
+    @FormUrlEncoded
+    @PATCH("needsreview/{krs_id}/{meeting_id}")
+    fun updateReviewStatus(
+        @Header("Authorization") authToken: String?,
+        @Path("krs_id") krsId: Int?,
+        @Path("meeting_id") meetingId: Int?,
+        @Field("needs_review") needsReview: Int?
     ): Call<ResponseBody?>?
 }

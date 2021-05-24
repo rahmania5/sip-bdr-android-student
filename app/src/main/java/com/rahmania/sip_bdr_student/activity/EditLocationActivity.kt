@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -46,6 +47,8 @@ class EditLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private var etLatitude: EditText? = null
     private var btnEditLocation: Button? = null
 
+    private val FINE_LOCATION_ACCESS_REQUEST_CODE = 2001
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_location)
@@ -68,7 +71,7 @@ class EditLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun setUpContent() {
         val user = sessionManager!!.getUserDetail()
-        val token = user!![sessionManager!!.TOKEN]
+        val token = user[sessionManager!!.TOKEN]
 
         id = intent.extras?.getInt("id")
         address = intent.extras?.getString("address")
@@ -189,8 +192,7 @@ class EditLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 override fun onMarkerDrag(marker: Marker) {
-                    Toast.makeText(this@EditLocationActivity,
-                        "Dragging", Toast.LENGTH_SHORT).show()
+                    //
                 }
             })
         }
@@ -199,16 +201,38 @@ class EditLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getLocation(): Location? {
         val locationManager: LocationManager =
             getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val criteria = Criteria()
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
-            //Location Permission already granted
-        }
-        return locationManager.getBestProvider(criteria, true)?.let {
-            locationManager.getLastKnownLocation(
-                it
+        val locationGPS: Location? =
+            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        val locationNet: Location? =
+            locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this@EditLocationActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                FINE_LOCATION_ACCESS_REQUEST_CODE
             )
+        }
+
+        var gpsLocationTime: Long = 0
+        if (null != locationGPS) {
+            gpsLocationTime = locationGPS.time
+        }
+
+        var netLocationTime: Long = 0
+
+        if (null != locationNet) {
+            netLocationTime = locationNet.time
+        }
+
+        return if (0 < gpsLocationTime - netLocationTime) {
+            locationGPS
+        } else {
+            locationNet
         }
     }
 
@@ -224,30 +248,6 @@ class EditLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 address!!, longitude, latitude)
         locationCall?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
-//                val jsonRESULTS: JSONObject?
-//                jsonRESULTS = JSONObject(response.body()!!.string())
-//                val locationData = jsonRESULTS.getJSONObject("studentlocation")
-//                Log.e("Location Data", locationData.toString())
-//                if (locationData.length() != 0) {
-//                    val name = locationData.getString("name")
-//                    val nim = locationData.getString("nim")
-//                    val submissionStatus = locationData.getString("submission_status")
-//
-//                    Toast.makeText(
-//                        this@EditLocationActivity,
-//                        "Lokasi berhasil diupdate!",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                    val intent =
-//                        Intent(this@EditLocationActivity, LocationDetailActivity::class.java)
-//                    intent.putExtra("id", id)
-//                    intent.putExtra("name", name)
-//                    intent.putExtra("nim", nim)
-//                    intent.putExtra("address", address)
-//                    intent.putExtra("longitude", longitude)
-//                    intent.putExtra("latitude", latitude)
-//                    intent.putExtra("submissionStatus", submissionStatus)
-
                 Toast.makeText(
                         this@EditLocationActivity,
                         "Lokasi berhasil diupdate!",
@@ -257,14 +257,13 @@ class EditLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                     Intent(this@EditLocationActivity, MainActivity::class.java)
                 startActivity(intent)
                 finish()
-//                }
                 progressDialog.hideLoading()
             }
 
             override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
                 Log.e("error data", t.message.toString())
                 Toast.makeText(this@EditLocationActivity,
-                    "Gagal menyimpan data. Mohon lengkapi field yang belum diisi.",
+                    "Gagal menyimpan data.",
                     Toast.LENGTH_SHORT).show()
             }
         })

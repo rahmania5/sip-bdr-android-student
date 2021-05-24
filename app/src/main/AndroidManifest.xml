@@ -3,31 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.rahmania.sip_bdr_student">
 
-    <!--  Permissions -->
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:usesCleartextTraffic="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:targetApi="n">
+
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/app_name" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,44 +38,76 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <receiver
-            android:name=".helper.GeofenceBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true" />
-
         <!-- Classroom Detail Activity -->
         <activity
             android:name=".activity.ClassroomDetailActivity"
-            android:label="Detail Kelas" >
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <!-- Attendance History Activity -->
+        <activity
+            android:name=".activity.AttendanceHistoryActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <!-- Meeting Detail Activity -->
-<!--        <activity-->
-<!--            android:name=".activity.MeetingDetailActivity"-->
-<!--            android:label="Detail Pertemuan" >-->
-<!--        </activity>-->
+        <activity
+            android:name=".activity.MeetingDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <!-- Location Submission Detail Activity -->
         <activity
             android:name=".activity.LocationDetailActivity"
-            android:label="Detail Pengajuan Lokasi" >
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <!-- Add Location Activity -->
         <activity
             android:name=".activity.AddLocationActivity"
-            android:label="Tambah Lokasi" >
+            android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <!-- Edit Location Activity -->
         <activity
             android:name=".activity.EditLocationActivity"
-            android:label="Edit Lokasi" >
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <!-- Change Password Activity -->
         <activity
             android:name=".activity.ChangePasswordActivity"
-            android:label="Ganti Password" >
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <!-- Geofence Activity -->
+        <activity
+            android:name=".activity.GeofenceActivity"
+            android:label="Map">
+        </activity>
+        <!-- Notification Activity -->
+        <activity android:name=".activity.NotificationActivity" />
+        <!-- Alert Dialog Activity -->
+        <activity
+            android:name=".activity.AlertDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
 
-    </application>
+        <receiver
+            android:name=".helper.GeofenceBroadcastReceiver"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="true" />
 
+<!--        <service-->
+<!--            android:name=".helper.LocationService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false" />-->
+
+        <service
+            android:name=".helper.FirebaseMessageReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".helper.NotificationBroadcastReceiver" />
+    </application>
 
 </manifest>

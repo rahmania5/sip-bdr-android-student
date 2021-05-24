@@ -18,6 +18,7 @@ import com.rahmania.sip_bdr_student.activity.LocationDetailActivity
 import com.rahmania.sip_bdr_student.adapter.LocationSubmissionAdapter
 import com.rahmania.sip_bdr_student.helper.SharedPreferences
 import com.rahmania.sip_bdr_student.helper.SharedPreferences.SessionManager
+import com.rahmania.sip_bdr_student.viewModel.AccountViewModel
 import com.rahmania.sip_bdr_student.viewModel.LocationSubmissionViewModel
 import org.json.JSONArray
 import org.json.JSONException
@@ -28,6 +29,7 @@ class LocationSubmissionFragment : Fragment() {
     private var rv: RecyclerView? = null
     private var tvNoLocationSubmission: TextView? = null
     private var locationVM: LocationSubmissionViewModel? = null
+    private var accountVM: AccountViewModel? = null
     private var sessionManager: SharedPreferences? = null
 
     private var fabAddLocation: FloatingActionButton? = null
@@ -44,6 +46,8 @@ class LocationSubmissionFragment : Fragment() {
         super.onViewCreated(v, savedInstanceState)
         rv = v.findViewById<View>(R.id.rv_locations) as RecyclerView
         rv!!.layoutManager = LinearLayoutManager(activity)
+        val tvName: TextView = v.findViewById(R.id.tv_name) as TextView
+        val tvNim: TextView = v.findViewById(R.id.tv_nim) as TextView
         tvNoLocationSubmission = v.findViewById<View>(R.id.tv_no_locationSubmission) as TextView
         fabAddLocation = v.findViewById<View>(R.id.fab_addLocation) as FloatingActionButton
         val locationAdapter = activity?.let { LocationSubmissionAdapter(it) }
@@ -66,7 +70,23 @@ class LocationSubmissionFragment : Fragment() {
         sessionManager = SessionManager(context)
         sessionManager!!.isLogin()
         val user = sessionManager!!.getUserDetail()
-        val token = user!![sessionManager!!.TOKEN]
+        val token = user[sessionManager!!.TOKEN]
+        accountVM =
+            ViewModelProvider(
+                requireActivity(),
+                ViewModelProvider.NewInstanceFactory()
+            ).get(AccountViewModel::class.java)
+
+        accountVM!!.setProfile(token)
+        accountVM!!.getProfile().observe(
+            requireActivity(),
+            Observer<HashMap<String, String>> { stringStringHashMap ->
+                if (stringStringHashMap.size > 0) {
+                    tvName.text = stringStringHashMap[accountVM!!.name]
+                    tvNim.text = stringStringHashMap[accountVM!!.nim]
+                }
+            })
+
         locationVM =
             ViewModelProvider(requireActivity(), ViewModelProvider.NewInstanceFactory()).get(
                 LocationSubmissionViewModel::class.java)

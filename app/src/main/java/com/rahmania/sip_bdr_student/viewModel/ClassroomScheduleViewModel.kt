@@ -15,13 +15,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class ClassroomDetailViewModel : ViewModel() {
+class ClassroomScheduleViewModel : ViewModel() {
     private lateinit var apiInterface: ApiInterface
-    private val meetingsData = MutableLiveData<JSONArray>()
+    private val classroomSchedule = MutableLiveData<JSONArray>()
 
-    fun setMeetings(token: String?, classroomId: Int?) {
+    fun setClassroomSchedule(token: String?, classroomId: Int) {
         this.apiInterface = getClient()!!.create(ApiInterface::class.java)
-        apiInterface.getMeetings(token, classroomId)?.enqueue(object : Callback<ResponseBody?> {
+        apiInterface.getClassroomSchedule(token, classroomId)?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(
                 call: Call<ResponseBody?>?,
                 response: Response<ResponseBody?>
@@ -30,8 +30,8 @@ class ClassroomDetailViewModel : ViewModel() {
                     val jsonRESULTS: JSONObject?
                     try {
                         jsonRESULTS = JSONObject(response.body()!!.string())
-                        val meetings = jsonRESULTS.getJSONArray("meetings")
-                        meetingsData.postValue(meetings)
+                        val classSchedule = jsonRESULTS.getJSONArray("schedules")
+                        classroomSchedule.postValue(classSchedule)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     } catch (e: IOException) {
@@ -46,7 +46,7 @@ class ClassroomDetailViewModel : ViewModel() {
         })
     }
 
-    fun getMeetings(): LiveData<JSONArray>? {
-        return meetingsData
+    fun getClassroomSchedule(): LiveData<JSONArray> {
+        return classroomSchedule
     }
 }

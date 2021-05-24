@@ -17,11 +17,11 @@ import java.io.IOException
 
 class ClassroomViewModel : ViewModel() {
     private lateinit var apiInterface: ApiInterface
-    private val classroomScheduleList = MutableLiveData<JSONArray>()
+    private val classroomList = MutableLiveData<JSONArray>()
 
-    fun setClassroomSchedule(token: String?) {
+    fun setClassrooms(token: String?) {
         this.apiInterface = getClient()!!.create(ApiInterface::class.java)
-        apiInterface.getClassroomSchedule(token)?.enqueue(object : Callback<ResponseBody?> {
+        apiInterface.getClassroomList(token)?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(
                 call: Call<ResponseBody?>?,
                 response: Response<ResponseBody?>
@@ -30,8 +30,8 @@ class ClassroomViewModel : ViewModel() {
                     val jsonRESULTS: JSONObject?
                     try {
                         jsonRESULTS = JSONObject(response.body()!!.string())
-                        val classSchedules = jsonRESULTS.getJSONArray("krs")
-                        classroomScheduleList.postValue(classSchedules)
+                        val classrooms = jsonRESULTS.getJSONArray("krs")
+                        classroomList.postValue(classrooms)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     } catch (e: IOException) {
@@ -46,7 +46,7 @@ class ClassroomViewModel : ViewModel() {
         })
     }
 
-    fun getClassroomSchedule(): LiveData<JSONArray>? {
-        return classroomScheduleList
+    fun getClassrooms(): LiveData<JSONArray>? {
+        return classroomList
     }
 }

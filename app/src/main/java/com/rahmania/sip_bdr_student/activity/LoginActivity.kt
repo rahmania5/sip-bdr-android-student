@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.rahmania.sip_bdr_student.activity
 
 import android.content.Intent
@@ -8,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.iid.FirebaseInstanceId
 import com.rahmania.sip_bdr_student.R
 import com.rahmania.sip_bdr_student.api.ApiClient
 import com.rahmania.sip_bdr_student.api.ApiInterface
@@ -22,6 +25,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
+@Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity() {
 
     private var username: String? = null
@@ -63,8 +67,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun login(username: String, password: String) {
         progressDialog.showLoading()
+        val deviceId = FirebaseInstanceId.getInstance().token.toString()
         apiInterface = ApiClient.getClient()!!.create(ApiInterface::class.java)
-        val loginCall: Call<ResponseBody?>? = apiInterface.loginResponse(username, password)
+        val loginCall: Call<ResponseBody?>? = apiInterface.loginResponse(username, password, deviceId)
         loginCall?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
                 if (response.isSuccessful) {
@@ -75,9 +80,10 @@ class LoginActivity : AppCompatActivity() {
                         Log.e("User Data", userData.toString())
                         if (userData.length() != 0) {
                             val token = userData.getString("access_token")
+                            val fcmToken = userData.getString("fcm_token")
                             val name = userData.getString("name")
                             val nim = userData.getString("nim")
-                            sessionManager.createLoginSession(token, name, nim)
+                            sessionManager.createLoginSession(token, fcmToken, name, nim)
                             Toast.makeText(this@LoginActivity, "Anda login sebagai $name", Toast.LENGTH_SHORT).show()
                             val intent =
                                 Intent(this@LoginActivity, MainActivity::class.java)

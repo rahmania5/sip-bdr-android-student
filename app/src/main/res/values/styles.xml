@@ -12,6 +12,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:fontFamily">@font/raleway</item>
+    </style>
+
     <style name="TextList" parent="@style/TextAppearance.AppCompat">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

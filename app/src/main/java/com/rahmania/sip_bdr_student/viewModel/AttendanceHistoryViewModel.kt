@@ -15,13 +15,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class ClassroomDetailViewModel : ViewModel() {
+class AttendanceHistoryViewModel : ViewModel() {
     private lateinit var apiInterface: ApiInterface
     private val meetingsData = MutableLiveData<JSONArray>()
 
-    fun setMeetings(token: String?, classroomId: Int?) {
+    fun setMeetings(token: String?, krsId: Int?) {
         this.apiInterface = getClient()!!.create(ApiInterface::class.java)
-        apiInterface.getMeetings(token, classroomId)?.enqueue(object : Callback<ResponseBody?> {
+        apiInterface.getAttendanceHistory(token, krsId)?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(
                 call: Call<ResponseBody?>?,
                 response: Response<ResponseBody?>
@@ -30,7 +30,7 @@ class ClassroomDetailViewModel : ViewModel() {
                     val jsonRESULTS: JSONObject?
                     try {
                         jsonRESULTS = JSONObject(response.body()!!.string())
-                        val meetings = jsonRESULTS.getJSONArray("meetings")
+                        val meetings = jsonRESULTS.getJSONArray("attendance")
                         meetingsData.postValue(meetings)
                     } catch (e: JSONException) {
                         e.printStackTrace()

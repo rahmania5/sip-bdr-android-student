@@ -24,27 +24,27 @@
             style="@style/TextAbout.Black"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
-            android:textSize="26sp"
+            android:textSize="20sp"
             tools:text="Nama Mahasiswa" />
 
         <TextView
             android:id="@+id/tv_nim"
             style="@style/TextAbout.Black"
             android:layout_marginBottom="8dp"
-            android:textSize="22sp"
+            android:textSize="20sp"
             tools:text="NIM" />
 
         <TextView
             style="@style/TextAbout.Subtitle"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/loc_description" />
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp">
 
             <TableRow
@@ -125,7 +125,7 @@
             android:clickable="true"
             app:borderWidth="0dp"
             app:elevation="16dp"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@android:color/white"
             app:pressedTranslationZ="12dp"
             android:id="@+id/fab_editLocation"
             android:focusable="true" />
@@ -142,7 +142,7 @@
             android:clickable="true"
             app:borderWidth="0dp"
             app:elevation="16dp"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@android:color/white"
             app:pressedTranslationZ="12dp"
             android:id="@+id/fab_deleteLocation"
             android:focusable="true" />
@@ -159,7 +159,7 @@
             android:clickable="true"
             app:borderWidth="0dp"
             app:elevation="16dp"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@android:color/white"
             app:pressedTranslationZ="12dp"
             android:id="@+id/fab"
             android:focusable="true"/>
