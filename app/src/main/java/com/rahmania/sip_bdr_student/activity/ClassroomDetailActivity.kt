@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -15,7 +14,7 @@ import com.rahmania.sip_bdr_student.R
 import com.rahmania.sip_bdr_student.adapter.MeetingAdapter
 import com.rahmania.sip_bdr_student.helper.CustomProgressDialog
 import com.rahmania.sip_bdr_student.helper.SharedPreferences
-import com.rahmania.sip_bdr_student.viewModel.ClassroomDetailViewModel
+import com.rahmania.sip_bdr_student.viewModel.AttendanceHistoryViewModel
 import com.rahmania.sip_bdr_student.viewModel.ClassroomScheduleViewModel
 import org.json.JSONArray
 import org.json.JSONException
@@ -30,7 +29,7 @@ import java.util.*
 class ClassroomDetailActivity : AppCompatActivity() {
     private var rv: RecyclerView? = null
     private var scheduleVM: ClassroomScheduleViewModel? = null
-    private var meetingVM: ClassroomDetailViewModel? = null
+    private var meetingVM: AttendanceHistoryViewModel? = null
     private var sessionManager: SharedPreferences? = null
     private lateinit var progressDialog: CustomProgressDialog
 
@@ -40,7 +39,6 @@ class ClassroomDetailActivity : AppCompatActivity() {
     private var tvCourseCode:TextView? = null
     private var tvSks: TextView? = null
     private var tvSchedule: TextView? = null
-    private var btnHistory: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +51,6 @@ class ClassroomDetailActivity : AppCompatActivity() {
         tvCourseCode = findViewById(R.id.tv_code)
         tvSks = findViewById(R.id.tv_sks)
         tvSchedule = findViewById(R.id.tv_schedule)
-
-        btnHistory = findViewById(R.id.btn_history)
 
         sessionManager = SharedPreferences.SessionManager(this)
         sessionManager!!.isLogin()
@@ -114,7 +110,6 @@ class ClassroomDetailActivity : AppCompatActivity() {
                 override fun onItemClick(item: JSONObject) {
                     val intent = Intent(this@ClassroomDetailActivity, MeetingDetailActivity::class.java)
                     intent.putExtra("meeting", item.toString())
-                    intent.putExtra("krsId", id!!)
                     intent.putExtra("classroomId", classroomId)
                     intent.putExtra("className", className)
                     intent.putExtra("sks", sks)
@@ -125,10 +120,10 @@ class ClassroomDetailActivity : AppCompatActivity() {
             rv!!.adapter = meetingAdapter
 
             meetingVM = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
-                ClassroomDetailViewModel::class.java
+                AttendanceHistoryViewModel::class.java
             )
             progressDialog.showLoading()
-            meetingVM!!.setMeetings(token, classroomId)
+            meetingVM!!.setMeetings(token, id)
             meetingVM!!.getMeetings()?.observe(this,
                 Observer<JSONArray?> { data ->
                     if (data != null) {
@@ -136,20 +131,6 @@ class ClassroomDetailActivity : AppCompatActivity() {
                         progressDialog.hideLoading()
                     }
                 })
-
-            btnHistory?.setOnClickListener { v ->
-                when (v.id) {
-                    R.id.btn_history -> {
-                        val i = Intent(this@ClassroomDetailActivity, AttendanceHistoryActivity::class.java)
-                        i.putExtra("id", id!!)
-                        i.putExtra("classroomId", classroomId)
-                        i.putExtra("className", className)
-                        i.putExtra("courseCode", courseCode)
-                        i.putExtra("sks", sks)
-                        startActivity(i)
-                    }
-                }
-            }
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -157,5 +138,4 @@ class ClassroomDetailActivity : AppCompatActivity() {
 
     @SuppressLint("DefaultLocale")
     private fun String.capitalizeFirstLetter() = this.split(" ").joinToString(" ") { it.capitalize() }.trimEnd()
-
 }

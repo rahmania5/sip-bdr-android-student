@@ -24,14 +24,21 @@
         <TextView
             android:id="@+id/tv_item_classroom"
             style="@style/TextList"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="6dp"
             android:textStyle="bold"
             tools:text="Nama Kelas" />
 
         <TextView
             android:id="@+id/tv_item_code"
             style="@style/TextList"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="6dp"
             tools:text="TSI 101" />
+
+        <TextView
+            android:id="@+id/tv_item_period"
+            style="@style/TextList"
+            android:textColor="@color/colorSubTitle"
+            android:textSize="12sp"
+            tools:text="Ganjil 2019/2020" />
     </LinearLayout>
 </RelativeLayout>

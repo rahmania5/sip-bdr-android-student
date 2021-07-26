@@ -6,16 +6,13 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_save">Simpan</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
     <string name="menu_1">Daftar Kelas</string>
     <string name="menu_2">Pengajuan Lokasi</string>
     <string name="menu_3">Akun</string>
     <string name="app_long_name">Sistem Informasi Presensi BDR</string>
     <string name="nim">NIM. %1$s</string>
     <string name="content_desc">Logo Unand</string>
-    <string name="content_desc_2">Profile pic</string>
+    <string name="content_desc_2">Profile Pic</string>
     <string name="change_pass">Ganti Password</string>
     <string name="loc_description">Detail Pengajuan Lokasi</string>
     <string name="address">Alamat</string>
@@ -28,7 +25,7 @@
     <string name="sks">SKS</string>
     <string name="day">Hari</string>
     <string name="time">Jam</string>
-    <string name="classmeeting_description">Daftar Pertemuan</string>
+    <string name="attendance_description">Riwayat Kehadiran</string>
     <string name="lecturer">Dosen</string>
     <string name="action_save_changes">Simpan Perubahan</string>
     <string name="meeting_description">Detail Pertemuan</string>
@@ -42,15 +39,13 @@
     <string name="google_maps_key">AIzaSyCtigRen8h--o1nQV9HijxeJPCKhZoKQjo</string>
     <string name="date">Tanggal</string>
     <string name="topic">Materi</string>
-    <string name="action_taking_attendance">Isi Presensi</string>
-    <string name="action_see_history">Lihat Riwayat Kehadiran</string>
-    <string name="attendance_description">Riwayat Kehadiran</string>
     <string name="content_desc_attendance">Status Kehadiran</string>
     <string name="nim2">NIM</string>
     <string name="name">Nama</string>
     <string name="courseCode">Kode Matkul</string>
     <string name="schedule">Jadwal</string>
     <string name="classroom">Kelas</string>
+    <string name="action_submit_request">Ajukan Ganti Status</string>
     <string name="logout">Logout</string>
     <string name="geofence_unknown_error">
       Unknown error: the Geofence service is not available now.

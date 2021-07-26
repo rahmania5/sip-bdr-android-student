@@ -70,12 +70,6 @@ interface ApiInterface {
         @Path("id") id: Int?
     ): Call<ResponseBody?>?
 
-    @GET("studentmeetings/{id}")
-    fun getMeetings(
-        @Header("Authorization") authToken: String?,
-        @Path("id") classroomId: Int?
-    ): Call<ResponseBody?>?
-
     @GET("latlng")
     fun getLatLng(@Header("Authorization") authToken: String?): Call<ResponseBody?>?
 
@@ -89,17 +83,16 @@ interface ApiInterface {
     @POST("studentattendance")
     fun updateAttendance(
         @Header("Authorization") authToken: String?,
-        @Field("krs_id") krsId: Int?,
-        @Field("meeting_id") meetingId: Int?,
-        @Field("presence_status") attendanceStatus: String?
+        @Field("meeting_id") meetingId: String?,
+        @Field("presence_status") attendanceStatus: String?,
+        @Field("needs_review") needsReview: Int?
     ): Call<ResponseBody?>?
 
     @FormUrlEncoded
-    @PATCH("needsreview/{krs_id}/{meeting_id}")
+    @PATCH("needsreview/{meeting_id}")
     fun updateReviewStatus(
         @Header("Authorization") authToken: String?,
-        @Path("krs_id") krsId: Int?,
-        @Path("meeting_id") meetingId: Int?,
+        @Path("meeting_id") meetingId: String?,
         @Field("needs_review") needsReview: Int?
     ): Call<ResponseBody?>?
 }

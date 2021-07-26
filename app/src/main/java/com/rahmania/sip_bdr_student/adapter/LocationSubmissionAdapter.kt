@@ -56,7 +56,9 @@ class LocationSubmissionAdapter(val context: Context) : RecyclerView.Adapter<Loc
         try {
             holder.tvAddress.text = locationData.getJSONObject(position).getString("address")
             holder.tvStatus.text = locationData.getJSONObject(position).getString("submission_status")
-            if (holder.tvStatus.text == "Disetujui") {
+            if (holder.tvStatus.text == "Belum Disetujui") {
+                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.black))
+            } else if (holder.tvStatus.text == "Disetujui") {
                 holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.colorSubTitle))
             } else if (holder.tvStatus.text == "Ditolak") {
                 holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.red))

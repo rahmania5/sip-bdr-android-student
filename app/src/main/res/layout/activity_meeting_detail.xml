@@ -134,7 +134,8 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 style="@style/TextSpec.Field"
@@ -146,30 +147,19 @@
                 tools:text="Tipe Data C++" />
         </TableRow>
 
-<!--        <TableRow-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/status_row">-->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-<!--            <TextView-->
-<!--                style="@style/TextSpec.Field"-->
-<!--                android:text="@string/submission_status" />-->
+            <TextView
+                style="@style/TextSpec.Field"
+                android:text="@string/submission_status" />
 
-<!--            <TextView-->
-<!--                android:id="@+id/tv_presence_status"-->
-<!--                style="@style/TextSpec.Value"-->
-<!--                tools:text="Hadir" />-->
-<!--        </TableRow>-->
+            <TextView
+                android:id="@+id/tv_presence_status"
+                style="@style/TextSpec.Value"
+                tools:text="Hadir" />
+        </TableRow>
 
     </TableLayout>
-
-    <Button
-        android:id="@+id/btn_take_attendance"
-        android:layout_margin="22dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="64dp"
-        android:enabled="true"
-        android:text="@string/action_taking_attendance"
-        style="@style/Button" />
-
 </LinearLayout>

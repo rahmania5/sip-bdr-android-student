@@ -29,6 +29,7 @@ class ClassroomAdapter : RecyclerView.Adapter<ClassroomAdapter.ListViewHolder>()
         RecyclerView.ViewHolder(itemView) {
         val tvClassroom: TextView = itemView.findViewById<View>(R.id.tv_item_classroom) as TextView
         val tvCourseCode: TextView = itemView.findViewById<View>(R.id.tv_item_code) as TextView
+        val tvPeriod: TextView = itemView.findViewById<View>(R.id.tv_item_period) as TextView
         fun bind(item: JSONObject, listener: OnItemClickListener?) {
             itemView.setOnClickListener {
                 try {
@@ -58,6 +59,7 @@ class ClassroomAdapter : RecyclerView.Adapter<ClassroomAdapter.ListViewHolder>()
             holder.tvClassroom.text = (classroomData.getJSONObject(position).getString("course_name").capitalizeFirstLetter() + " "
                     + classroomData.getJSONObject(position).getString("classroom_code"))
             holder.tvCourseCode.text = classroomData.getJSONObject(position).getString("course_code").toUpperCase()
+            holder.tvPeriod.text = classroomData.getJSONObject(position).getString("period")
             holder.bind(classroomData.getJSONObject(position), listener)
         } catch (e: JSONException) {
             e.printStackTrace()

@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -43,11 +42,6 @@
             android:name=".activity.ClassroomDetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <!-- Attendance History Activity -->
-        <activity
-            android:name=".activity.AttendanceHistoryActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
         <!-- Meeting Detail Activity -->
         <activity
             android:name=".activity.MeetingDetailActivity"
@@ -62,7 +56,6 @@
         <activity
             android:name=".activity.AddLocationActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
         <!-- Edit Location Activity -->
         <activity
@@ -74,13 +67,6 @@
             android:name=".activity.ChangePasswordActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <!-- Geofence Activity -->
-        <activity
-            android:name=".activity.GeofenceActivity"
-            android:label="Map">
-        </activity>
-        <!-- Notification Activity -->
-        <activity android:name=".activity.NotificationActivity" />
         <!-- Alert Dialog Activity -->
         <activity
             android:name=".activity.AlertDialogActivity"
@@ -88,18 +74,12 @@
         </activity>
 
         <receiver
-            android:name=".helper.GeofenceBroadcastReceiver"
-            android:directBootAware="true"
+            android:name=".geofence.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
 
-<!--        <service-->
-<!--            android:name=".helper.LocationService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false" />-->
-
         <service
-            android:name=".helper.FirebaseMessageReceiver"
+            android:name=".notification.FirebaseMessageReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -107,7 +87,7 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".helper.NotificationBroadcastReceiver" />
+        <receiver android:name=".notification.NotificationBroadcastReceiver" />
     </application>
 
 </manifest>

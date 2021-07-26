@@ -1,4 +1,4 @@
-package com.rahmania.sip_bdr_student.helper
+package com.rahmania.sip_bdr_student.geofence
 
 import android.app.PendingIntent
 import android.content.Context
@@ -35,19 +35,14 @@ class GeofenceManager(base: Context?) : ContextWrapper(base) {
             .setRequestId(id)
             .setTransitionTypes(transitionType)
             .setLoiteringDelay(60000)
-//            .setNotificationResponsiveness(1000)
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .build()
     }
 
-    fun getPendingIntent(krsId: Int?, meetingId: Int?, token: String?): PendingIntent? {
-        if (pendingIntent != null) {
-            return pendingIntent
-        }
+    fun getPendingIntent(meetingId: String?, dwellTriggered: String?): PendingIntent? {
         val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
-        intent.putExtra("krsId", krsId)
         intent.putExtra("meetingId", meetingId)
-        intent.putExtra("token", token)
+        intent.putExtra("dwellTriggered", dwellTriggered)
         pendingIntent =
             PendingIntent.getBroadcast(this, 5001, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         return pendingIntent

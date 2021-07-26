@@ -30,6 +30,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 import java.util.*
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -139,19 +140,26 @@ class EditLocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 val addresses: List<Address>
                 val geocoder = Geocoder(applicationContext, Locale.getDefault())
 
-                addresses = geocoder.getFromLocation(
-                    position!!.latitude,
-                    position.longitude,
-                    1
-                ) // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                try {
+                    addresses = geocoder.getFromLocation(
+                        position!!.latitude,
+                        position.longitude,
+                        1
+                    ) // Here 1 represent max location result to returned, by documents it recommended 1 to 5
 
-                if (addresses.isNotEmpty()) {
-                    val address: String = addresses[0].getAddressLine(0)
-                    etAddress?.setText(address)
-                } else {
-                    etAddress?.setText("")
+                    if (addresses.isNotEmpty()) {
+                        val address: String = addresses[0].getAddressLine(0)
+                        etAddress?.setText(address)
+                    } else {
+                        etAddress?.setText("")
+                        Toast.makeText(
+                            this@EditLocationActivity, "Invalid location. Please select a valid location.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } catch (e: IOException) {
                     Toast.makeText(
-                        this@EditLocationActivity, "Invalid location. Please select a valid location",
+                        this@EditLocationActivity, "Error getting address. Please reboot your device.",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -173,19 +181,26 @@ class EditLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     val addresses: List<Address>
                     val geocoder = Geocoder(applicationContext, Locale.getDefault())
-                    addresses = geocoder.getFromLocation(
-                        pos.latitude,
-                        pos.longitude,
-                        1
-                    ) // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                    try {
+                        addresses = geocoder.getFromLocation(
+                            pos.latitude,
+                            pos.longitude,
+                            1
+                        ) // Here 1 represent max location result to returned, by documents it recommended 1 to 5
 
-                    if (addresses.isNotEmpty()) {
-                        val address: String = addresses[0].getAddressLine(0)
-                        etAddress?.setText(address)
-                    } else {
-                        etAddress?.setText("")
+                        if (addresses.isNotEmpty()) {
+                            val address: String = addresses[0].getAddressLine(0)
+                            etAddress?.setText(address)
+                        } else {
+                            etAddress?.setText("")
+                            Toast.makeText(
+                                this@EditLocationActivity, "Invalid location. Please select a valid location.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } catch (e: IOException) {
                         Toast.makeText(
-                            this@EditLocationActivity, "Invalid location. Please select a valid location",
+                            this@EditLocationActivity, "Error getting address. Please reboot your device.",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

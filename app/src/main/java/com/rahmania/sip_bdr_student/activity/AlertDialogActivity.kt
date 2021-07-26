@@ -8,7 +8,7 @@ import android.view.ContextThemeWrapper
 import com.rahmania.sip_bdr_student.R
 import com.rahmania.sip_bdr_student.api.ApiClient
 import com.rahmania.sip_bdr_student.api.ApiInterface
-import com.rahmania.sip_bdr_student.helper.NotificationHelper
+import com.rahmania.sip_bdr_student.notification.NotificationUtil
 import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
@@ -16,20 +16,22 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
+    "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
+)
 class AlertDialogActivity: Activity() {
-    private var notificationHelper: NotificationHelper? = null
     private var token: String? = null
-    private var krsId: Int? = null
-    private var meetingId: Int? = null
+    private var meetingId: String? = null
+    private var startTime: String? = null
     private var absence = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        notificationHelper = NotificationHelper(this)
-        krsId = intent.extras?.getInt("krsId")
-        meetingId = intent.extras?.getInt("meetingId")
+        meetingId = intent.extras?.getString("meetingId")
+        startTime = intent.extras?.getString("startTime")
         token = intent.extras?.getString("token")
 
         val builder: AlertDialog.Builder = AlertDialog.Builder(
@@ -46,10 +48,7 @@ class AlertDialogActivity: Activity() {
         ) { _, _ ->
             absence = false
             try {
-                updateStatus(krsId, meetingId, token, "Hadir")
-//                val returnIntent = Intent()
-//                returnIntent.putExtra("absence", absence)
-//                setResult(RESULT_OK, returnIntent)
+                updateStatus(meetingId, token, "Hadir")
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
@@ -70,8 +69,7 @@ class AlertDialogActivity: Activity() {
         dialog?.setOnDismissListener {
             if (absence) {
                 try {
-                    updateStatus(krsId, meetingId, token, "Absen")
-//                    geofenceActivity?.updateStatus(krsId, meetingId, token, "Absen")
+                    updateStatus(meetingId, token, "Absen")
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
@@ -81,17 +79,20 @@ class AlertDialogActivity: Activity() {
     }
 
     private fun updateStatus(
-        krsId: Int?,
-        meetingId: Int?,
+        meetingId: String?,
         token: String?,
         status: String?
     ) {
+        var needsReview = 0
+        if (startTime?.let { isLate(it) } == true && status == "Hadir") {
+            needsReview = 2
+        }
         val apiInterface: ApiInterface = ApiClient.getClient()!!.create(ApiInterface::class.java)
         val attendanceResponse: Call<ResponseBody?>? = apiInterface.updateAttendance(
             token,
-            krsId,
             meetingId,
-            status
+            status,
+            needsReview
         )
         attendanceResponse?.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(
@@ -102,19 +103,21 @@ class AlertDialogActivity: Activity() {
                 try {
                     jsonRESULTS = JSONObject(response.body()!!.string())
                     val attendance = jsonRESULTS.getJSONObject("attendance")
-                    Log.d("Attendance Data", attendance.toString())
                     if (attendance.length() != 0) {
                         val attendanceStatus = attendance.getString("presence_status")
+                        val meetingID = attendance.getString("meeting_id")
 
                         if (attendanceStatus == "Hadir") {
-                            notificationHelper!!.sendHighPriorityNotification(
-                                "Status Kehadiran", "Berhasil mengisi daftar hadir!",
-                                MainActivity::class.java
+                            NotificationUtil(applicationContext).showNotification(
+                                "Status Kehadiran",
+                                "Berhasil mengisi daftar hadir!",
+                                meetingID
                             )
                         } else if (attendanceStatus == "Absen") {
-                            notificationHelper!!.sendHighPriorityNotification(
-                                "Status Kehadiran", "Anda tidak hadir pada pertemuan ini.",
-                                MainActivity::class.java
+                            NotificationUtil(applicationContext).showNotification(
+                                "Status Kehadiran",
+                                "Anda tidak hadir pada pertemuan ini.",
+                                meetingID
                             )
                         }
                     }
@@ -127,11 +130,27 @@ class AlertDialogActivity: Activity() {
 
             override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
                 Log.e("error data", t.message.toString())
-                notificationHelper!!.sendHighPriorityNotification(
-                    "Status Kehadiran", "Gagal mengisi daftar hadir.",
-                    MainActivity::class.java
+                NotificationUtil(applicationContext).showNotification(
+                    "Status Kehadiran", "Anda tidak hadir pada pertemuan ini."
                 )
-            }
+           }
         })
+    }
+
+    private fun isLate(
+        startTimeString: String
+    ): Boolean {
+        val sdfTime = SimpleDateFormat("HH:mm", Locale.US)
+        val timeNow = sdfTime.parse(
+            sdfTime.format(
+                Calendar.getInstance().time
+            )
+        )
+        val startTime = sdfTime.parse(startTimeString)
+        val isLate = timeNow.time > (startTime.time + 15 * 60 * 1000)
+        if (isLate) {
+            return true
+        }
+        return false
     }
 }

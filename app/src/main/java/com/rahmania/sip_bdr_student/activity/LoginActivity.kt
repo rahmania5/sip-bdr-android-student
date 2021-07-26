@@ -80,10 +80,9 @@ class LoginActivity : AppCompatActivity() {
                         Log.e("User Data", userData.toString())
                         if (userData.length() != 0) {
                             val token = userData.getString("access_token")
-                            val fcmToken = userData.getString("fcm_token")
                             val name = userData.getString("name")
                             val nim = userData.getString("nim")
-                            sessionManager.createLoginSession(token, fcmToken, name, nim)
+                            sessionManager.createLoginSession(token, name, nim)
                             Toast.makeText(this@LoginActivity, "Anda login sebagai $name", Toast.LENGTH_SHORT).show()
                             val intent =
                                 Intent(this@LoginActivity, MainActivity::class.java)
